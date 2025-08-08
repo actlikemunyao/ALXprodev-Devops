@@ -1,0 +1,42 @@
+#!/bin/bash
+# Script: 2-batch_extract.sh
+# Description: Batch extraction of Pokémon data from a list
+
+INPUT_FILE="pokemon_list.txt"
+CSV_FILE="pokemon_data.csv"
+
+# Check if input file exists
+if [ ! -f "$INPUT_FILE" ]; then
+  echo "Error: $INPUT_FILE not found."
+  exit 1
+fi
+
+# Create CSV file with header if it doesn't exist
+if [ ! -f "$CSV_FILE" ]; then
+  echo "id,name,base_experience,height,weight,types" > "$CSV_FILE"
+fi
+
+# Loop through the list
+while IFS= read -r POKEMON; do
+  echo "Fetching data for $POKEMON..."
+
+  # Fetch data
+  response=$(curl -s "https://pokeapi.co/api/v2/pokemon/$POKEMON")
+
+  # Check if response is valid
+  if echo "$response" | jq -e .name >/dev/null 2>&1; then
+    name=$(echo "$response" | jq -r '.name')
+    id=$(echo "$response" | jq -r '.id')
+    base_exp=$(echo "$response" | jq -r '.base_experience')
+    height=$(echo "$response" | jq -r '.height')
+    weight=$(echo "$response" | jq -r '.weight')
+    types=$(echo "$response" | jq -r '.types[].type.name' | paste -sd "," -)
+
+    echo "$id,$name,$base_exp,$height,$weight,\"$types\"" >> "$CSV_FILE"
+  else
+    echo "❌ Error: Pokémon '$POKEMON' not found."
+  fi
+
+done < "$INPUT_FILE"
+
+echo "✅ Batch extraction completed. Data saved to $CSV_FILE"
