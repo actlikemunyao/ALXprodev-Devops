@@ -12,3 +12,5 @@ url="https://pokeapi.co/api/v2/pokemon/$1"
 
 # Make the request and display the result
 curl -s "$url" | jq '.'
+["errors.txt"]
+["data.json"]
