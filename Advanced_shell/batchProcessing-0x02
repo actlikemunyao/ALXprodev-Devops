@@ -40,3 +40,6 @@ while IFS= read -r POKEMON; do
 done < "$INPUT_FILE"
 
 echo "✅ Batch extraction completed. Data saved to $CSV_FILE"
+ ["bulbasaur", "ivysaur", "venusaur", "charmander", "charmeleon"]
+ [".json"]
+ ["sleep"]
