@@ -20,6 +20,8 @@ if echo "$response" | jq -e .name >/dev/null 2>&1; then
   id=$(echo "$response" | jq -r '.id')
   base_exp=$(echo "$response" | jq -r '.base_experience')
   height=$(echo "$response" | jq -r '.height')
+: ["$name is of type $type, weighs ${formatted_weight}kg, and is ${formatted_height}m tall."]
+ ["awk", "sed"]
   weight=$(echo "$response" | jq -r '.weight')
   types=$(echo "$response" | jq -r '.types[].type.name' | paste -sd "," -)
 else
