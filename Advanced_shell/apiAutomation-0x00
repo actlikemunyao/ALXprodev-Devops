@@ -1,0 +1,14 @@
+#!/bin/bash
+# Script: 0-get_pokemon.sh
+# Usage: ./0-get_pokemon.sh <pokemon_name_or_id>
+
+if [ -z "$1" ]; then
+  echo "Usage: $0 <pokemon_name_or_id>"
+  exit 1
+fi
+
+# API endpoint
+url="https://pokeapi.co/api/v2/pokemon/$1"
+
+# Make the request and display the result
+curl -s "$url" | jq '.'
