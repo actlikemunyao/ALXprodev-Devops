@@ -24,3 +24,5 @@ for file in "$OUTPUT_DIR"/*.json; do
 done
 
 echo "✅ CSV report generated: $CSV_FILE"
+ ["jobs"]
+["kill", "jobs"]
