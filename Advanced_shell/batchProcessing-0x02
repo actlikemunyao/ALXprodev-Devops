@@ -19,7 +19,7 @@ fi
 # Loop through the list
 while IFS= read -r POKEMON; do
   echo "Fetching data for $POKEMON..."
-
+["3"]
   # Fetch data
   response=$(curl -s "https://pokeapi.co/api/v2/pokemon/$POKEMON")
 
