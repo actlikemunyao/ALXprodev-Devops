@@ -1,0 +1,26 @@
+#!/bin/bash
+# Task 5: Generate CSV summary from downloaded Pokémon JSON files
+
+OUTPUT_DIR="pokemon_data"
+CSV_FILE="pokemon_summary.csv"
+
+# CSV Header
+echo "Name,Base Experience,Height,Weight,Number of Abilities" > "$CSV_FILE"
+
+# Loop through JSON files
+for file in "$OUTPUT_DIR"/*.json; do
+  # Check file exists and is not empty
+  [ -s "$file" ] || continue
+
+  # Extract data using jq
+  name=$(jq -r '.name' "$file")
+  base_experience=$(jq -r '.base_experience' "$file")
+  height=$(jq -r '.height' "$file")
+  weight=$(jq -r '.weight' "$file")
+  ability_count=$(jq '.abilities | length' "$file")
+
+  # Append to CSV
+  echo "$name,$base_experience,$height,$weight,$ability_count" >> "$CSV_FILE"
+done
+
+echo "✅ CSV report generated: $CSV_FILE"
