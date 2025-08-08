@@ -1,0 +1,38 @@
+#!/bin/bash
+# Script: 1-extract_to_csv.sh
+# Description: Fetch Pokémon data and save to CSV
+
+if [ -z "$1" ]; then
+  echo "Usage: $0 <pokemon_name_or_id>"
+  exit 1
+fi
+
+POKEMON="$1"
+URL="https://pokeapi.co/api/v2/pokemon/$POKEMON"
+CSV_FILE="pokemon_data.csv"
+
+# Fetch data
+response=$(curl -s "$URL")
+
+# Handle 404 or error
+if echo "$response" | jq -e .name >/dev/null 2>&1; then
+  name=$(echo "$response" | jq -r '.name')
+  id=$(echo "$response" | jq -r '.id')
+  base_exp=$(echo "$response" | jq -r '.base_experience')
+  height=$(echo "$response" | jq -r '.height')
+  weight=$(echo "$response" | jq -r '.weight')
+  types=$(echo "$response" | jq -r '.types[].type.name' | paste -sd "," -)
+else
+  echo "Error: Pokémon '$POKEMON' not found."
+  exit 1
+fi
+
+# Create CSV file with header if it doesn't exist
+if [ ! -f "$CSV_FILE" ]; then
+  echo "id,name,base_experience,height,weight,types" > "$CSV_FILE"
+fi
+
+# Append data to CSV
+echo "$id,$name,$base_exp,$height,$weight,\"$types\"" >> "$CSV_FILE"
+
+echo "✅ Pokémon '$name' data saved to $CSV_FILE"
